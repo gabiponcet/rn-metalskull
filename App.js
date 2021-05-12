@@ -1,38 +1,20 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import Button from './src/components/Button';
+import 'react-native-gesture-handler'; //deve ser no topo essa importação
+import React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import Home from './src/screens/Home';
+import SignIn from'./src/screens/SignIn';
+import SignUp from './src/screens/SingUp';
 
-
-export default function MetalSkull() {
-  const [counter, setCounter] = useState(0);
-
-  const count = () => {
-    setCounter(counter + 1);
-  };
-
-  const reset = () => {
-    setCounter(0);
-  };
-
+const Stack = createStackNavigator();
+export default function App() {
   return (
-    <View>
-      <Text style={styles.text}>Olá, metaleiros</Text>
-      <Text style={styles.text}>Contador = {counter}</Text>
-
-      <Button text="save" onClick={count} />
-      <Button text="reset" onClick={reset} />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="SignIn">
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="SignUp" component={SignUp} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  text: {
-    fontSize: 24,
-  },
-  button: {
-    alignItems: 'center',
-    backgroundColor: '#f5f',
-    padding: 10,
-    margin: 10,
-  },
-});
