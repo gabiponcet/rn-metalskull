@@ -1,5 +1,6 @@
 import React from 'react';
 import {Text, StyleSheet, TouchableHighlight} from 'react-native';
+import {COLORS} from '../assets/colors';
 
 const Button = props => {
   console.log(props);
@@ -18,13 +19,18 @@ export default Button;
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 24,
+    fontSize: 25,
+    color: COLORS.primaryDark,
   },
   button: {
+    width: '95%',
+    height: 50,
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f',
+    backgroundColor: COLORS.accent,
     padding: 10,
     margin: 10,
+    borderRadius: 5,
   },
 });
 

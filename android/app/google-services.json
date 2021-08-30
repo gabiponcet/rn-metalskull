@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "83528088940",
+    "project_id": "metalskull-9ede9",
+    "storage_bucket": "metalskull-9ede9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:83528088940:android:a503d733f982e3e8a50749",
+        "android_client_info": {
+          "package_name": "com.metalskull"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "83528088940-83rpj8egp55660e1chtev9lsmqk2i05m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOjc60mT2fwn5T8zpGK6-OFOIjzQr_c-Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "83528088940-83rpj8egp55660e1chtev9lsmqk2i05m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
