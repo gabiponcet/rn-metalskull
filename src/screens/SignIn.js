@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+  Alert,
   SafeAreaView,
   View,
   StyleSheet,
@@ -8,11 +9,13 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
+
+import {CommonActions} from '@react-navigation/native';
 import Button from '../components/Button';
 import {COLORS} from '../assets/colors';
 import auth from '@react-native-firebase/auth';
 
-const SingIn = props => {
+const SingIn = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
 
@@ -22,16 +25,37 @@ const SingIn = props => {
 
   const login = () => {
     console.log(`${email} ${pass}`);
-    auth()
-      .signInWithEmailAndPassword(email, pass)
-      .then(() => {
-        alert('Logou');
-        setEmail('');
-        setPass('');
-      })
-      .catch(e => {
-        console.log('SignIn: erro ao fazer login' + e);
-      });
+    if (email !== '' && pass !== '') {
+      auth()
+        .signInWithEmailAndPassword(email, pass)
+        .then(() => {
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'Home'}],
+            }),
+          );
+        })
+        .catch(e => {
+          console.log('SignIn: erro ao fazer login' + e);
+          switch (e.code) {
+            case 'auth/user-not-found':
+              Alert.alert('Erro: usuário não cadastrado');
+              break;
+            case 'auth/wrong-password':
+              Alert.alert('Erro: senha incorreta');
+              break;
+            case 'auth/invalid-email':
+              Alert.alert('Erro: e-mail inválido');
+              break;
+            case 'auth/user-disabled':
+              Alert.alert('Erro: usuário desabilitado');
+              break;
+          }
+        });
+    } else {
+      Alert.alert('Erro', 'Preencha todos os campos.');
+    }
   };
 
   const cadastrar = () => {
@@ -56,7 +80,7 @@ const SingIn = props => {
             onEndEditing={() => this.passTextInput.focus()}
           />
           <TextInput
-           /*  ref={ref => {
+            /*  ref={ref => {
               this.passTextInput = ref;
             }} */
             style={styles.input}
