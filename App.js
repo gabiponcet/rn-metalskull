@@ -7,6 +7,7 @@ import SignIn from './src/screens/SignIn';
 import SignUp from './src/screens/SingUp';
 import {StatusBar} from 'react-native';
 import {COLORS} from './src/assets/colors';
+import ForgotPassword from './src/screens/ForgotPassword';
 
 const Stack = createStackNavigator();
 export default function App() {
@@ -15,8 +16,13 @@ export default function App() {
       <StatusBar backgroundColor={COLORS.primary} />
       <Stack.Navigator initialRouteName="SignIn">
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="SignIn" component={SignIn}  options={signInStyle} />
+        <Stack.Screen name="SignIn" component={SignIn} options={signInStyle} />
         <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen
+          name="ForgotPassword"
+          component={ForgotPassword}
+          options={forgotPassword}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -27,4 +33,11 @@ const signInStyle = {
   title: 'Bem vindo',
   headerStyle: {backgroundColor: COLORS.primary},
   headerTitleStyle: {color: COLORS.accentSecundary},
+};
+
+const forgotPassword = {
+  title: 'Recuperação de senha',
+  headerStyle: {backgroundColor: COLORS.primary},
+  headerTitleStyle: {color: COLORS.accentSecundary},
+  headerTintColor: COLORS.accent,
 };
