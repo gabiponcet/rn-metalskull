@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Alert,
   SafeAreaView,
@@ -10,6 +10,12 @@ import {
   ScrollView,
 } from 'react-native';
 
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+
 import {CommonActions} from '@react-navigation/native';
 import Button from '../components/Button';
 import {COLORS} from '../assets/colors';
@@ -19,8 +25,68 @@ const SingIn = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
 
-  const recoverPassword = () => {
-    alert('Recuperar senha');
+  const [loggedIn, setloggedIn] = useState(false);
+  const [userInfo, setuserInfo] = useState([]);
+
+  const signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const {accessToken, idToken} = await GoogleSignin.signIn();
+      setloggedIn(true);
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+        alert('Processo cancelado.');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        alert('Signin em progresso.');
+        // operation (f.e. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        alert('Serviço indisponível.');
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
+
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: 'Home'}],
+      }),
+    );
+  };
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
+      webClientId:
+        '418977770929-g9ou7r9eva1u78a3anassxxxxxxx.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+      offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+    });
+  }, []);
+
+  const getCurrentUserInfo = async () => {
+    try {
+      const userInfo = await GoogleSignin.signInSilently();
+      this.setState({userInfo});
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_REQUIRED) {
+        // user has not signed in yet
+      } else {
+        // some other error
+      }
+    }
+  };
+
+  const signOut = async () => {
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      setloggedIn(false);
+      setuserInfo([]);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const login = () => {
@@ -59,9 +125,17 @@ const SingIn = ({navigation}) => {
   };
 
   const cadastrar = () => {
-    alert('vai para Sign UP');
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: 'SignUp'}],
+      }),
+    );
   };
 
+  const recoverPassword = () => {
+    navigation.navigate('ForgotPassword');
+  };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -99,6 +173,20 @@ const SingIn = ({navigation}) => {
             <View style={styles.divHr} />
             <Text style={styles.textOu}>OU</Text>
             <View style={styles.divHr} />
+          </View>
+          <View style={styles.sectionContainer}>
+            <GoogleSigninButton
+              style={{width: 192, height: 48}}
+              size={GoogleSigninButton.Size.Wide}
+              color={GoogleSigninButton.Color.Dark}
+              onPress={signIn}
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            {!loggedIn && <Text>You are currently logged out</Text>}
+            {loggedIn && (
+              <Button onPress={signOut} title="LogOut" color="red" />
+            )}
           </View>
           <View style={styles.divCadastro}>
             <Text style={styles.textNormal}>Não possui conta?</Text>
