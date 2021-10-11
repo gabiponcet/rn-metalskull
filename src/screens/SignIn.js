@@ -15,11 +15,11 @@ import {
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
 
 import {CommonActions} from '@react-navigation/native';
 import Button from '../components/Button';
 import {COLORS} from '../assets/colors';
-import auth from '@react-native-firebase/auth';
 
 const SingIn = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -89,53 +89,6 @@ const SingIn = ({navigation}) => {
     }
   };
 
-  const login = () => {
-    console.log(`${email} ${pass}`);
-    if (email !== '' && pass !== '') {
-      auth()
-        .signInWithEmailAndPassword(email, pass)
-        .then(() => {
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{name: 'Home'}],
-            }),
-          );
-        })
-        .catch(e => {
-          console.log('SignIn: erro ao fazer login' + e);
-          switch (e.code) {
-            case 'auth/user-not-found':
-              Alert.alert('Erro: usuário não cadastrado');
-              break;
-            case 'auth/wrong-password':
-              Alert.alert('Erro: senha incorreta');
-              break;
-            case 'auth/invalid-email':
-              Alert.alert('Erro: e-mail inválido');
-              break;
-            case 'auth/user-disabled':
-              Alert.alert('Erro: usuário desabilitado');
-              break;
-          }
-        });
-    } else {
-      Alert.alert('Erro', 'Preencha todos os campos.');
-    }
-  };
-
-  const cadastrar = () => {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{name: 'SignUp'}],
-      }),
-    );
-  };
-
-  const recoverPassword = () => {
-    navigation.navigate('ForgotPassword');
-  };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -145,35 +98,14 @@ const SingIn = ({navigation}) => {
             source={require('../assets/images/base.png')}
             accessibilityLabel="logo MetalSkull"
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            keyboardType="email.address"
-            returnKeyType="next"
-            onChangeText={t => setEmail(t)}
-            onEndEditing={() => this.passTextInput.focus()}
-          />
-          <TextInput
-            /*  ref={ref => {
-              this.passTextInput = ref;
-            }} */
-            style={styles.input}
-            placeholder="Senha"
-            keyboardType="default"
-            returnKeyType="go"
-            onChangeText={t => setPass(t)}
-          />
-          <Text style={styles.forgotPassword} onPress={recoverPassword}>
-            Esqueci minha senha
-          </Text>
-          <Button text="ENTRAR" onClick={login} />
         </View>
         <View style={styles.divInf}>
           <View style={styles.divOUHr}>
-            <View style={styles.divHr} />
-            <Text style={styles.textOu}>OU</Text>
-            <View style={styles.divHr} />
+            <Text style={styles.textNormal}>Não possui conta?</Text>
           </View>
+          <Text style={styles.textCadastro}>
+            Cadastre-se usando o seu GMAIL!
+          </Text>
           <View style={styles.sectionContainer}>
             <GoogleSigninButton
               style={{width: 192, height: 48}}
@@ -187,12 +119,6 @@ const SingIn = ({navigation}) => {
             {loggedIn && (
               <Button onPress={signOut} title="LogOut" color="red" />
             )}
-          </View>
-          <View style={styles.divCadastro}>
-            <Text style={styles.textNormal}>Não possui conta?</Text>
-            <Text style={styles.textCadastro} onPress={cadastrar}>
-              Cadastre-se
-            </Text>
           </View>
         </View>
       </ScrollView>
