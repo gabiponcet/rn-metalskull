@@ -14,6 +14,7 @@ import {CommonActions} from '@react-navigation/native';
 import Button from '../components/Button';
 import {COLORS} from '../assets/colors';
 import auth from '@react-native-firebase/auth';
+import database from '@react-native-firebase/firestore';
 
 const SingIn = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -28,7 +29,8 @@ const SingIn = ({navigation}) => {
     if (email !== '' && pass !== '') {
       auth()
         .signInWithEmailAndPassword(email, pass)
-        .then(() => {
+        .then((res) => {
+          database().collection('users')
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
@@ -59,7 +61,12 @@ const SingIn = ({navigation}) => {
   };
 
   const cadastrar = () => {
-    alert('vai para Sign UP');
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: 'SignUp'}],
+      }),
+    );
   };
 
   return (
