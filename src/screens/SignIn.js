@@ -10,11 +10,7 @@ import {
   ScrollView,
 } from 'react-native';
 
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
+import firebase from 'firebase';
 import auth from '@react-native-firebase/auth';
 
 import {CommonActions} from '@react-navigation/native';
@@ -29,64 +25,14 @@ const SingIn = ({navigation}) => {
   const [userInfo, setuserInfo] = useState([]);
 
   const signIn = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const {accessToken, idToken} = await GoogleSignin.signIn();
-      setloggedIn(true);
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
-        alert('Processo cancelado.');
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        alert('Signin em progresso.');
-        // operation (f.e. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        alert('Serviço indisponível.');
-        // play services not available or outdated
-      } else {
-        // some other error happened
-      }
-    }
+    console.log(firebase.database());
 
-    navigation.dispatch(
+    /* navigation.dispatch(
       CommonActions.reset({
         index: 0,
         routes: [{name: 'Home'}],
       }),
-    );
-  };
-
-  useEffect(() => {
-    GoogleSignin.configure({
-      scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
-      webClientId:
-        '418977770929-g9ou7r9eva1u78a3anassxxxxxxx.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-      offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
-    });
-  }, []);
-
-  const getCurrentUserInfo = async () => {
-    try {
-      const userInfo = await GoogleSignin.signInSilently();
-      this.setState({userInfo});
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_REQUIRED) {
-        // user has not signed in yet
-      } else {
-        // some other error
-      }
-    }
-  };
-
-  const signOut = async () => {
-    try {
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
-      setloggedIn(false);
-      setuserInfo([]);
-    } catch (error) {
-      console.error(error);
-    }
+    );*/
   };
 
   return (
@@ -107,18 +53,10 @@ const SingIn = ({navigation}) => {
             Cadastre-se usando o seu GMAIL!
           </Text>
           <View style={styles.sectionContainer}>
-            <GoogleSigninButton
-              style={{width: 192, height: 48}}
-              size={GoogleSigninButton.Size.Wide}
-              color={GoogleSigninButton.Color.Dark}
-              onPress={signIn}
-            />
+            <Text>Login</Text>
           </View>
-          <View style={styles.buttonContainer}>
-            {!loggedIn && <Text>You are currently logged out</Text>}
-            {loggedIn && (
-              <Button onPress={signOut} title="LogOut" color="red" />
-            )}
+          <View>
+            <Button text="signin" onClick={signIn} />
           </View>
         </View>
       </ScrollView>
